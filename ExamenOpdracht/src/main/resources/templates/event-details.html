@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="${event.naam}">Event Details</title>
+    <link rel="stylesheet" th:href="@{/css/eventInfo.css}" />
+</head>
+<body>
+    <div class="auth-container">
+        <div sec:authorize="!isAuthenticated()">
+            <span th:text="#{status.loggedout}">Uitgelogd</span>
+            <a href="/login" th:text="#{link.login}">Login</a>
+        </div>
+
+        <div sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 10px;">
+            <span>
+                <span th:text="#{label.role}">Rol:</span>
+                <span th:text="${userRoles != ''} ? userRoles : #{label.noRole}">Geen rol</span>
+            </span>
+
+            <form th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" th:text="#{button.logout}">Uitloggen</button>
+            </form>
+        </div>
+    </div>
+    
+    <h1 th:text="${event.naam}">Event Naam</h1>
+    <p><strong th:text="#{label.description}">Beschrijving:</strong> <span th:text="${event.beschrijving}"></span></p>
+    <p><strong th:text="#{label.speakers}">Spreker(s):</strong>
+        <span th:each="spreker, iterStat : ${event.sprekers}">
+            <span th:text="${spreker}"></span><span th:if="${!iterStat.last}">, </span>
+        </span>
+    </p>
+    <p><strong th:text="#{label.room}">Lokaal:</strong> <span th:text="${event.lokaal.naam}"></span></p>
+    <p><strong th:text="#{label.capacity}">Capaciteit:</strong> <span th:text="${event.lokaal.capaciteit}"></span></p>
+
+    <!-- Prijs toevoegen -->
+    <p>
+        <strong th:text="#{label.price}">Prijs:</strong>
+        <span th:if="${event.prijs != null}">
+            &euro; <span th:text="${#numbers.formatDecimal(event.prijs, 1, 'COMMA', 2, 'POINT')}"></span>
+        </span>
+        <span th:if="${event.prijs == null}">
+            Gratis
+        </span>
+    </p>
+
+    <p><strong th:text="#{label.datetime}">Datum en tijd:</strong> <span th:text="${#temporals.format(event.datumTijd, 'dd-MM-yyyy HH:mm')}"></span></p>
+
+    <div th:if="${isUser}">
+        <form th:action="@{/event/favoriet-toevoegen/{id}(id=${event.id})}" method="post">
+            <button type="submit" th:disabled="${isFavoriet or limietBereikt}">
+                <span th:text="isFavoriet ? #{button.alreadyFavorited} : (limietBereikt ? #{button.limitReached} : #{button.addToFavorites})"></span>
+            </button>
+        </form>
+    </div>
+
+    <div th:if="${isAdmin}">
+        <a th:href="@{/event/bewerken/{id}(id=${event.id})}">
+            <button th:text="#{button.editEvent}">Event bewerken</button>
+        </a>
+    </div>
+
+    <a th:href="@{/}" th:text="#{link.backToOverview}">Terug naar overzicht</a>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="#{favorites.title}">Favoriete Events</title>
+     <link rel="stylesheet" th:href="@{/css/favorieten.css}" />
+</head>
+<body>
+
+<h1 th:text="#{favorites.header}">Mijn Favoriete Events</h1>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th th:text="#{label.name}">Naam</th>
+            <th th:text="#{label.datetime}">Datum & Tijd</th>
+            <th th:text="#{label.room}">Lokaal</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="event : ${favorieten}">
+            <td><a th:href="@{/event/{id}(id=${event.id})}" th:text="${event.naam}"></a></td>
+            <td th:text="${#temporals.format(event.datumTijd, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${event.lokaal.naam}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<a href="/" class="back-button" th:text="#{button.backToOverview}">Terug naar overzicht</a>
+
+</body>
+</html>

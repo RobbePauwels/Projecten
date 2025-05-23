@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="#{title.editEvent}">Event Bewerken</title>
+    <link rel="stylesheet" th:href="@{/css/eventBewerken.css}" />
+</head>
+<body>
+    <div class="auth-container">
+        <div sec:authorize="isAuthenticated()" class="auth-info">
+            <span th:text="#{label.role} + ': ' + (${userRoles != ''} ? ${userRoles} : #{label.noRole})">Rol Gebruiker</span>
+            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                <button type="submit" th:text="#{button.logout}">Uitloggen</button>
+            </form>
+        </div>
+    </div>
+
+    <h1 th:text="#{event.edit.title}">Event Bewerken</h1>
+
+    <form th:action="@{/event/bewerken/{id}(id=${event.id})}" th:object="${event}" method="post">
+        
+        <!-- Validatiefouten binnen het form -->
+        <div th:if="${#fields.hasErrors('*')}">
+            <p style="color:red">Er zijn fouten in het formulier:</p>
+            <ul>
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <input type="hidden" th:field="*{id}" />
+
+        <label th:for="naam" th:text="#{label.name}">Naam:</label>
+        <input type="text" th:field="*{naam}" id="naam" required />
+
+        <label th:for="beschrijving" th:text="#{label.description}">Beschrijving:</label>
+        <textarea th:field="*{beschrijving}" id="beschrijving" required></textarea>
+
+        <label th:for="datumTijd" th:text="#{label.datetime}">Datum & Tijd:</label>
+        <input type="datetime-local" th:field="*{datumTijd}" id="datumTijd" required />
+
+        <label th:for="lokaal" th:text="#{label.room}">Lokaal:</label>
+        <select th:field="*{lokaal}" id="lokaal" required>
+            <option th:each="lokaal : ${lokalen}" th:value="${lokaal.id}" th:text="${lokaal.naam}"></option>
+        </select>
+
+        <label th:for="beamerCode" th:text="#{label.beamerCode}">Beamer Code:</label>
+        <input type="number" th:field="*{beamerCode}" id="beamerCode" required />
+
+        <label th:for="beamerCheck" th:text="#{label.beamerCheck}">Beamer Check:</label>
+        <input type="number" th:field="*{beamerCheck}" id="beamerCheck" required />
+
+        <label th:for="prijs" th:text="#{label.price}">Prijs (€):</label>
+        <input type="number" th:field="*{prijs}" id="prijs" step="0.01" min="9.99" max="99.99" required />
+
+        <label th:text="#{label.speakers}">Sprekers (max 3):</label>
+        <input type="text" th:field="*{sprekers[0]}" required />
+        <input type="text" th:field="*{sprekers[1]}" />
+        <input type="text" th:field="*{sprekers[2]}" />
+
+        <div class="form-actions">
+            <button type="submit" th:text="#{button.save}">Opslaan</button>
+            <a th:href="@{/}" th:text="#{link.backToOverview}">Terug naar overzicht</a>
+        </div>
+    </form>
+</body>
+</html>

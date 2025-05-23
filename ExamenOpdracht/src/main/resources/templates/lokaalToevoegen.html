@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Lokaal toevoegen</title>
+    <link rel="stylesheet" th:href="@{/css/lokaal.css}" />
+</head>
+<body>
+
+<div class="auth-container" th:if="${#authentication.principal != null}">
+    <strong th:text="#{label.role} + ': '">Rol: </strong><span th:text="${userRoles}">ROLE_GEBRUIKER</span>
+
+    <form th:action="@{/logout}" method="post" style="margin:0;">
+        <button type="submit" th:text="#{button.logout}">Logout</button>
+    </form>
+</div>
+
+<h1>Lokaal Toevoegen</h1>
+
+<!-- Succesbericht -->
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<form th:action="@{/lokaal/toevoegen}" th:object="${lokaal}" method="post" class="form-container">
+    <div class="form-group">
+        <label for="naam">Naam van het lokaal:</label>
+        <input type="text" th:field="*{naam}" id="naam" required />
+        <div class="error" th:if="${#fields.hasErrors('naam')}" th:errors="*{naam}"></div>
+    </div>
+
+    <div class="form-group">
+        <label for="capaciteit">Capaciteit:</label>
+        <input type="number" th:field="*{capaciteit}" id="capaciteit" min="1" max="50" required />
+        <div class="error" th:if="${#fields.hasErrors('capaciteit')}" th:errors="*{capaciteit}"></div>
+    </div>
+
+    <div class="button-group">
+        <button type="submit" class="btn-submit">Voeg lokaal toe</button>
+        <a th:href="@{/}" class="btn-secondary">Terug naar overzicht</a>
+    </div>
+</form>
+
+</body>
+</html>

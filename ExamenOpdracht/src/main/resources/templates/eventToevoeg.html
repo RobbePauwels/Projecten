@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="#{event.add.title}">Nieuw Event Toevoegen</title>
+    <link rel="stylesheet" th:href="@{/css/eventToevoegen.css}" />
+</head>
+<body>
+
+<div class="auth-container" th:if="${#authentication.principal != null}">
+    <strong th:text="#{label.role} + ': '">Rol: </strong><span th:text="${userRoles}">ROLE_GEBRUIKER</span>
+
+    <form th:action="@{/logout}" method="post" style="margin:0;">
+        <button type="submit" th:text="#{button.logout}">Logout</button>
+    </form>
+</div>
+
+<h1 th:text="#{event.add.header}">Nieuw Event Toevoegen</h1>
+
+<form th:action="@{/event/toevoeg}" th:object="${event}" method="post">
+
+    <label for="naam" th:text="#{event.add.name}">Naam*</label>
+    <input type="text" id="naam" th:field="*{naam}" required />
+
+    <label for="beschrijving" th:text="#{event.add.description}">Beschrijving</label>
+    <textarea id="beschrijving" th:field="*{beschrijving}"></textarea>
+
+    <label th:text="#{event.add.speakers}">Sprekers* (max 3)</label>
+    <input type="text" th:field="*{sprekers[0]}" required />
+    <input type="text" th:field="*{sprekers[1]}" />
+    <input type="text" th:field="*{sprekers[2]}" />
+
+    <label for="lokaal" th:text="#{event.add.room}">Lokaal*</label>
+    <select id="lokaal" th:field="*{lokaal}" required>
+        <option th:each="lokaal : ${lokalen}" th:value="${lokaal.id}" th:text="${lokaal.naam}"></option>
+    </select>
+
+    <label for="datumTijd" th:text="#{event.add.datetime}">Datum & Tijd*</label>
+    <input type="datetime-local" id="datumTijd" th:field="*{datumTijd}" required />
+
+    <label for="beamerCode" th:text="#{event.add.beamercode}">Beamercode (4 cijfers)*</label>
+    <input type="text" id="beamerCode" th:field="*{beamerCode}" pattern="\d{4}" maxlength="4" required />
+
+    <label for="beamerCheck" th:text="#{event.add.beamercheck}">Beamercheck (2 cijfers)*</label>
+    <input type="text" id="beamerCheck" th:field="*{beamerCheck}" pattern="\d{2}" maxlength="2" required />
+
+    <label for="prijs" th:text="#{event.add.price}">Prijs (€)*</label>
+    <input type="number" step="0.01" min="9.99" max="99.99" id="prijs" th:field="*{prijs}" required />
+
+    <div class="form-actions">
+        <a th:href="@{/}" class="button-like" role="button" th:text="#{button.goBack}">Ga terug</a>
+        <button type="submit" th:text="#{button.addEvent}">Event Toevoegen</button>
+    </div>
+
+</form>
+
+</body>
+</html>

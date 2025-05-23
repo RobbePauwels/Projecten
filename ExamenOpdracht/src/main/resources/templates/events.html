@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="#{event.list.title}">IT Conferentie - Overzicht events</title>
+    <link rel="stylesheet" th:href="@{/css/event.css}" />
+</head>
+<body>
+
+<div class="auth-container">
+    <div sec:authorize="!isAuthenticated()">
+        <span th:text="#{status.loggedout}">Uitgelogd</span>
+        <a href="/login" th:text="#{link.login}">Login</a>
+    </div>
+    <div sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 10px;">
+        <span>
+            <span th:text="#{label.role}">Rol:</span>
+            <span th:text="${userRoles != ''} ? ${userRoles} : #{label.noRole}">Geen rol</span>
+        </span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" th:text="#{button.logout}">Uitloggen</button>
+        </form>
+    </div>
+</div>
+
+<h1 th:text="#{title.eventlist}">Overzicht van de conferentie</h1>
+
+<div sec:authorize="hasRole('USER')" style="margin-bottom: 15px;">
+    <a th:href="@{/favorieten}">
+        <button type="button" th:text="#{button.goToFavorites}">Ga naar Favorieten</button>
+    </a>
+</div>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th th:text="#{label.name}">Naam</th>
+            <th th:text="#{label.speakers}">Sprekers</th>
+            <th th:text="#{label.room}">Lokaal</th>
+            <th th:text="#{label.datetime}">Datum & Tijd</th>
+            <th sec:authorize="hasRole('ADMIN')" th:text="#{label.edit}">Bewerken</th>
+            <th sec:authorize="hasRole('USER')" th:text="#{label.favorite}">Favoriet</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="event : ${events}">
+            <td><a th:href="@{/event/{id}(id=${event.id})}" th:text="${event.naam}"></a></td>
+            <td>
+                <span th:each="spreker, iterStat : ${event.sprekers}">
+                    <span th:text="${spreker}"></span><span th:if="${!iterStat.last}">, </span>
+                </span>
+            </td>
+            <td th:text="${event.lokaal.naam}"></td>
+            <td th:text="${#temporals.format(event.datumTijd, 'dd-MM-yyyy HH:mm')}"></td>
+            <td sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/event/bewerken/{id}(id=${event.id})}" th:text="#{link.edit}">Bewerk</a>
+            </td>
+            <td sec:authorize="hasRole('USER')">
+                <form th:action="@{/event/favoriet-toevoegen/{id}(id=${event.id})}" method="post">
+                    <button type="submit"
+                        th:disabled="${(favorietIds != null and favorietIds.contains(event.id)) or limietBereikt}"
+                        th:text="#{button.addToFavorites}">
+                        Voeg toe aan favorieten
+                    </button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div sec:authorize="hasRole('ADMIN')" style="margin-top: 15px;">
+    <a th:href="@{/event/toevoeg}" class="new-event-button" th:text="#{button.addEvent}">Nieuw event</a>
+    <a th:href="@{/lokaal/toevoegen}" class="new-room-button" th:text="#{button.newRoom}">Nieuw lokaal</a>
+</div>
+
+
+</body>
+</html>

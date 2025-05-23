@@ -1,0 +1,166 @@
+/* Algemene pagina-opmaak */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px auto;
+    max-width: 900px;
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Login/Logout container */
+.auth-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.auth-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.auth-info span {
+    font-weight: bold;
+    color: #333;
+}
+
+.auth-info button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.auth-info button:hover {
+    background-color: #0056b3;
+}
+
+/* Formulieropmaak */
+form {
+    background-color: white;
+    padding: 25px;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #0056b3;
+}
+
+input[type="text"],
+input[type="datetime-local"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    background-color: #fff;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Form buttons netjes naast elkaar */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.form-actions a,
+.form-actions button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1em;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.form-actions a:hover,
+.form-actions button:hover {
+    background-color: #0056b3;
+}
+
+/* Tabelopmaak */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+thead {
+    background-color: #007bff;
+    color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+td a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+/* Nieuwe event knop rechtsonder */
+.new-event-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease;
+}
+
+.new-event-button:hover {
+    background-color: #0056b3;
+}
