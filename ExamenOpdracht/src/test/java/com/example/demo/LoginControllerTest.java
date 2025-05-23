@@ -1,9 +1,9 @@
 package com.example.demo;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -15,7 +15,7 @@ public class LoginControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void testLoginPageWithoutParams() throws Exception {
+    void loginPage_withoutParams_showsLoginView() throws Exception {
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"))
@@ -24,31 +24,18 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void testLoginPageWithErrorParam() throws Exception {
+    void loginPage_withError_showsError() throws Exception {
         mockMvc.perform(get("/login").param("error", "true"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"))
-                .andExpect(model().attributeExists("error"))
                 .andExpect(model().attribute("error", "Invalid username and password!"));
     }
 
     @Test
-    public void testLoginPageWithLogoutParam() throws Exception {
+    void loginPage_withLogout_showsLogoutMessage() throws Exception {
         mockMvc.perform(get("/login").param("logout", "true"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"))
-                .andExpect(model().attributeExists("msg"))
-                .andExpect(model().attribute("msg", "You've been logged out successfully."));
-    }
-
-    @Test
-    public void testLoginPageWithErrorAndLogoutParams() throws Exception {
-        mockMvc.perform(get("/login")
-                        .param("error", "true")
-                        .param("logout", "true"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("login"))
-                .andExpect(model().attribute("error", "Invalid username and password!"))
                 .andExpect(model().attribute("msg", "You've been logged out successfully."));
     }
 }

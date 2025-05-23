@@ -19,56 +19,50 @@ public class InitDataConfig {
                                LokaalRepository lokaalRepository,
                                UserRepository userRepository) {
         return args -> {
-            
-            Lokaal lokaal1 = Lokaal.builder()
-                    .naam("A101")
-                    .capaciteit(50)
-                    .build();
-            Lokaal lokaal2 = Lokaal.builder()
-                    .naam("B202")
-                    .capaciteit(20)
-                    .build();
+
+            Lokaal lokaal1 = new Lokaal();
+            lokaal1.setNaam("A101");
+            lokaal1.setCapaciteit(50);
+
+            Lokaal lokaal2 = new Lokaal();
+            lokaal2.setNaam("B202");
+            lokaal2.setCapaciteit(20);
+
             lokaalRepository.save(lokaal1);
             lokaalRepository.save(lokaal2);
 
-           
-            User admin = User.builder()
-                    .username("admin")
-                    .password("admin") 
-                    .role(Role.ADMIN)
-                    .build();
+            User admin = new User();
+            admin.setUsername("admin");
+            admin.setPassword("admin"); // Let op: wachtwoorden moeten gehashed worden!
+            admin.setRole(Role.ADMIN);
 
-            User user = User.builder()
-                    .username("user")
-                    .password("user")
-                    .role(Role.USER)
-                    .build();
+            User user = new User();
+            user.setUsername("user");
+            user.setPassword("user");
+            user.setRole(Role.USER);
 
             userRepository.save(admin);
             userRepository.save(user);
 
-          
-            Event event1 = Event.builder()
-                    .naam("Spring Boot Introductie")
-                    .beschrijving("Introductie tot Spring Boot framework")
-                    .sprekers(List.of("Jan Janssens", "Marie Curie"))
-                    .lokaal(lokaal1)
-                    .datumTijd(LocalDateTime.of(2025, 6, 10, 10, 0))
-                    .beamerCode(1234)
-                    .beamerCheck(1234 % 97)
-                    .prijs(BigDecimal.valueOf(19.99))
-                    .build();
+            Event event1 = new Event();
+            event1.setNaam("Spring Boot Introductie");
+            event1.setBeschrijving("Introductie tot Spring Boot framework");
+            event1.setSprekers(List.of("Jan Janssens", "Marie Curie"));
+            event1.setLokaal(lokaal1);
+            event1.setDatumTijd(LocalDateTime.of(2025, 6, 10, 10, 0));
+            event1.setBeamerCode(1234);
+            event1.setBeamerCheck(1234 % 97);
+            event1.setPrijs(BigDecimal.valueOf(19.99));
 
-            Event event2 = Event.builder()
-                    .naam("Microservices Architectuur")
-                    .beschrijving("Diepgaande sessie over microservices")
-                    .sprekers(List.of("Alan Turing"))
-                    .lokaal(lokaal2)
-                    .datumTijd(LocalDateTime.of(2025, 6, 10, 14, 0))
-                    .beamerCode(5678)
-                    .beamerCheck(5678 % 97)
-                    .prijs(BigDecimal.valueOf(29.99))
-                    .build();
+            Event event2 = new Event();
+            event2.setNaam("Microservices Architectuur");
+            event2.setBeschrijving("Diepgaande sessie over microservices");
+            event2.setSprekers(List.of("Alan Turing"));
+            event2.setLokaal(lokaal2);
+            event2.setDatumTijd(LocalDateTime.of(2025, 6, 10, 14, 0));
+            event2.setBeamerCode(5678);
+            event2.setBeamerCheck(5678 % 97);
+            event2.setPrijs(BigDecimal.valueOf(29.99));
 
             eventRepository.save(event1);
             eventRepository.save(event2);

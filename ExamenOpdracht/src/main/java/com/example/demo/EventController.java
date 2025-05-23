@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -41,8 +40,13 @@ public class EventController {
 
     @InitBinder("event")
     protected void initBinder(WebDataBinder binder) {
+        Object target = binder.getTarget();
+        if (target == null || !Event.class.isAssignableFrom(target.getClass())) {
+            return;
+        }
         binder.addValidators(eventValidatorAdvice);
     }
+
 
     private void addUserRolesToModel(Authentication authentication, Model model) {
         if (authentication != null) {
@@ -102,7 +106,6 @@ public class EventController {
             model.addAttribute("isFavoriet", false);
             model.addAttribute("limietBereikt", false);
         }
-       
 
         return "event-details";
     }
@@ -129,7 +132,7 @@ public class EventController {
     @GetMapping("/event/toevoeg")
     @PreAuthorize("hasRole('ADMIN')")
     public String toonEventToevoegPagina(Model model, Authentication authentication) {
-        model.addAttribute("event", Event.builder().build());
+        model.addAttribute("event", new Event());  // Hier geen builder meer
         model.addAttribute("lokalen", lokaalService.findAll());
         addUserRolesToModel(authentication, model);
         return "eventToevoeg";

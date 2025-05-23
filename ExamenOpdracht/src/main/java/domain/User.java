@@ -11,9 +11,7 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor
 @EqualsAndHashCode(of = "username")
 @ToString(onlyExplicitlyIncluded = true)
 public class User {

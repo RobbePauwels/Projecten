@@ -14,9 +14,7 @@ import java.util.List;
 @Table(name = "events")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString(onlyExplicitlyIncluded = true)
 public class Event {

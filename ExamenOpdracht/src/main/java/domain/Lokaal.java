@@ -11,9 +11,7 @@ import java.util.List;
 @Table(name = "lokalen")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor
 @EqualsAndHashCode(of = "naam")
 @ToString(onlyExplicitlyIncluded = true)
 public class Lokaal {

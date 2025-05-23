@@ -39,6 +39,6 @@ public class LokaalServiceImpl implements LokaalService {
 
     @Override
     public Lokaal createLokaalInstance() {
-        return Lokaal.builder().build();
+        return new Lokaal();
     }
 }

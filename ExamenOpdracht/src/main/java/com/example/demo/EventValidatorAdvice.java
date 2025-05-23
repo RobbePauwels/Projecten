@@ -10,14 +10,17 @@ import java.time.LocalDateTime;
 @Component
 public class EventValidatorAdvice implements Validator {
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return Event.class.isAssignableFrom(clazz);
-    }
+	@Override
+	public boolean supports(Class<?> clazz) {
+	    return Event.class.isAssignableFrom(clazz);
+	}
 
-    @Override
-    public void validate(Object target, Errors errors) {
-        Event event = (Event) target;
+	@Override
+	public void validate(Object target, Errors errors) {
+	    if (!(target instanceof Event)) {
+	        throw new IllegalArgumentException("Invalid target for EventValidatorAdvice");
+	    }
+	    Event event = (Event) target;
 
         if (event.getDatumTijd() != null && event.getDatumTijd().isBefore(LocalDateTime.now())) {
             errors.rejectValue("datumTijd", "event.datumtijd.past", "De datum en tijd moeten in de toekomst liggen.");
