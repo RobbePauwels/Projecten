@@ -4,7 +4,9 @@ import domain.Event;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,7 +19,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(EventRestController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class EventRestControllerTest {
 
     @Autowired
@@ -30,7 +33,7 @@ public class EventRestControllerTest {
     void getEventsByDate_ReturnsJsonList() throws Exception {
         Event event = new Event();
         event.setNaam("TestEvent");
-        event.setDatumTijd(LocalDate.now().atStartOfDay());
+        event.setDatumTijd(LocalDate.of(2025, 5, 23).atStartOfDay());
 
         Mockito.when(eventService.getEventsOpDatum(any(LocalDate.class)))
                 .thenReturn(List.of(event));
@@ -40,4 +43,5 @@ public class EventRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].naam").value("TestEvent"));
     }
+
 }

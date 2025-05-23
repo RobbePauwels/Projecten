@@ -2,6 +2,8 @@ package com.example.demo;
 
 import domain.Event;
 import domain.User;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +12,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+
 import service.EventService;
 import service.LokaalService;
 import service.UserService;
 
+import java.beans.PropertyEditorSupport;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.mockito.Mockito.*;
@@ -41,6 +48,27 @@ class EventControllerTest {
     @MockBean
     private EventValidatorAdvice eventValidatorAdvice;
 
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+    @BeforeEach
+    void setupValidator() {
+        when(eventValidatorAdvice.supports(any())).thenReturn(true);
+        doAnswer(invocation -> null).when(eventValidatorAdvice).validate(any(), any());
+    }
+
+    /**
+     * Simuleer binding van LocalDateTime in tests zoals in de controller met initBinder.
+     */
+    private void initBinder(WebDataBinder binder) {
+        binder.addValidators(eventValidatorAdvice);
+        binder.registerCustomEditor(LocalDateTime.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(LocalDateTime.parse(text, formatter));
+            }
+        });
+    }
+
     @Test
     @WithMockUser(roles = "ADMIN")
     void testToonEventToevoegPagina() throws Exception {
@@ -56,33 +84,29 @@ class EventControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testVerwerkEventToevoegingValid() throws Exception {
-        when(eventValidatorAdvice.supports(Event.class)).thenReturn(true);
-
         mockMvc.perform(post("/event/toevoeg")
                         .param("naam", "Test Event")
-                        .param("datumTijd", "2025-06-01T10:00") // voorbeeld datetime
+                        .param("datumTijd", "2025-06-01T10:00")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        verify(eventService).save(ArgumentMatchers.any(Event.class));
+        verify(eventService).save(any(Event.class));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void testVerwerkEventToevoegingInvalid() throws Exception {
-        // Simuleer validatiefout door BindingResult.hasErrors te laten true zijn via mock Validator
-
         doAnswer(invocation -> {
-            Object target = invocation.getArgument(0);
-            // forceer een validatiefout op purpose (je kunt ook de validator zelf mocken)
+            BindingResult bindingResult = invocation.getArgument(1);
+            bindingResult.reject("naam", "Lege naam niet toegestaan");
             return null;
         }).when(eventValidatorAdvice).validate(any(), any());
 
         when(lokaalService.findAll()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(post("/event/toevoeg")
-                        .param("naam", "") // fout: lege naam
+                        .param("naam", "")
                         .param("datumTijd", "2025-06-01T10:00")
                         .with(csrf()))
                 .andExpect(status().isOk())
@@ -127,7 +151,6 @@ class EventControllerTest {
                 .andExpect(redirectedUrl("/event/1"));
     }
 
-
     @Test
     @WithMockUser(roles = "ADMIN")
     void testToonEventBewerkenPagina() throws Exception {
@@ -148,8 +171,6 @@ class EventControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testVerwerkEventBewerkingValid() throws Exception {
-        when(eventValidatorAdvice.supports(Event.class)).thenReturn(true);
-
         mockMvc.perform(post("/event/bewerken/1")
                         .param("naam", "Test Event")
                         .param("datumTijd", "2025-06-01T10:00")
@@ -157,21 +178,22 @@ class EventControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        verify(eventService).save(ArgumentMatchers.any(Event.class));
+        verify(eventService).save(any(Event.class));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void testVerwerkEventBewerkingInvalid() throws Exception {
-        // Validator simuleert fout
         doAnswer(invocation -> {
+            BindingResult bindingResult = invocation.getArgument(1);
+            bindingResult.reject("naam", "Lege naam niet toegestaan");
             return null;
         }).when(eventValidatorAdvice).validate(any(), any());
 
         when(lokaalService.findAll()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(post("/event/bewerken/1")
-                        .param("naam", "") // fout: lege naam
+                        .param("naam", "")
                         .param("datumTijd", "2025-06-01T10:00")
                         .with(csrf()))
                 .andExpect(status().isOk())

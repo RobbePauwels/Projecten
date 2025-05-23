@@ -4,7 +4,8 @@ import domain.Lokaal;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import service.LokaalService;
@@ -12,10 +13,12 @@ import service.LokaalService;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(LokaalRestController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class LokaalRestControllerTest {
 
     @Autowired
@@ -31,7 +34,8 @@ public class LokaalRestControllerTest {
 
         Mockito.when(lokaalService.findById(anyLong())).thenReturn(Optional.of(lokaal));
 
-        mockMvc.perform(get("/api/lokaal/1/capaciteit"))
+        mockMvc.perform(get("/api/lokaal/1/capaciteit")
+                .with(user("user").roles("USER"))) 
                 .andExpect(status().isOk())
                 .andExpect(content().string("150"));
     }
@@ -40,7 +44,8 @@ public class LokaalRestControllerTest {
     void getLokaalCapaciteit_NotFound_ThrowsException() throws Exception {
         Mockito.when(lokaalService.findById(anyLong())).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/api/lokaal/999/capaciteit"))
-                .andExpect(status().isInternalServerError());
+        mockMvc.perform(get("/api/lokaal/999/capaciteit")
+                .with(user("user").roles("USER")))
+                .andExpect(status().isNotFound()); 
     }
 }

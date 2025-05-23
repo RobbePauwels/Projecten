@@ -4,7 +4,9 @@ import domain.Lokaal;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -12,10 +14,12 @@ import service.LokaalService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(lokaalController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class LokaalControllerTest {
 
     @Autowired
@@ -44,12 +48,14 @@ public class LokaalControllerTest {
 
         mockMvc.perform(post("/lokaal/toevoegen")
                         .param("naam", "TestLokaal")
-                        .param("capaciteit", "100"))
+                        .param("capaciteit", "100")
+                        .with(csrf())) 
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
         verify(lokaalService, times(1)).save(any(Lokaal.class));
     }
+
 
     @Test
     @WithMockUser(roles = "ADMIN")

@@ -4,6 +4,7 @@ import domain.Lokaal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import service.LokaalService;
+import exception.*;
 
 @RestController
 @RequestMapping("/api/lokaal")
@@ -16,7 +17,7 @@ public class LokaalRestController {
     public int getLokaalCapaciteit(@PathVariable Long id) {
         return lokaalService.findById(id)
                 .map(Lokaal::getCapaciteit)
-                .orElseThrow(() -> new RuntimeException("Lokaal met ID " + id + " niet gevonden"));
+                .orElseThrow(() -> new LokaalNotFoundException(id));
     }
 
 }
