@@ -2,7 +2,6 @@ package com.example.demo;
 
 import domain.Event;
 import domain.User;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -14,7 +13,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-
 import service.EventService;
 import service.LokaalService;
 import service.UserService;
@@ -56,9 +54,6 @@ class EventControllerTest {
         doAnswer(invocation -> null).when(eventValidatorAdvice).validate(any(), any());
     }
 
-    /**
-     * Simuleer binding van LocalDateTime in tests zoals in de controller met initBinder.
-     */
     private void initBinder(WebDataBinder binder) {
         binder.addValidators(eventValidatorAdvice);
         binder.registerCustomEditor(LocalDateTime.class, new PropertyEditorSupport() {
@@ -84,9 +79,13 @@ class EventControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testVerwerkEventToevoegingValid() throws Exception {
+        when(lokaalService.findAll()).thenReturn(Collections.emptyList());
+
         mockMvc.perform(post("/event/toevoeg")
                         .param("naam", "Test Event")
                         .param("datumTijd", "2025-06-01T10:00")
+                        .param("sprekers[0]", "Spreker 1")
+                        .param("lokaal.id", "1")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
@@ -108,6 +107,8 @@ class EventControllerTest {
         mockMvc.perform(post("/event/toevoeg")
                         .param("naam", "")
                         .param("datumTijd", "2025-06-01T10:00")
+                        .param("sprekers[0]", "Spreker 1")
+                        .param("lokaal.id", "1")
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("eventToevoeg"))
@@ -171,9 +172,13 @@ class EventControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testVerwerkEventBewerkingValid() throws Exception {
+        when(lokaalService.findAll()).thenReturn(Collections.emptyList());
+
         mockMvc.perform(post("/event/bewerken/1")
                         .param("naam", "Test Event")
                         .param("datumTijd", "2025-06-01T10:00")
+                        .param("sprekers[0]", "Spreker 1")
+                        .param("lokaal.id", "1")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
@@ -195,6 +200,8 @@ class EventControllerTest {
         mockMvc.perform(post("/event/bewerken/1")
                         .param("naam", "")
                         .param("datumTijd", "2025-06-01T10:00")
+                        .param("sprekers[0]", "Spreker 1")
+                        .param("lokaal.id", "1")
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("eventBewerken"))

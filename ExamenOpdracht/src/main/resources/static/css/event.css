@@ -1,4 +1,4 @@
-/* Algemene pagina-opmaak */
+
 body {
     font-family: Arial, sans-serif;
     margin: 20px auto;
@@ -13,7 +13,7 @@ h1 {
     margin-bottom: 30px;
 }
 
-/* Login/Logout container */
+
 .auth-container {
     display: flex;
     justify-content: flex-end;
@@ -39,7 +39,7 @@ h1 {
     background-color: #0056b3;
 }
 
-/* Tabelopmaak */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -72,7 +72,7 @@ td a:hover {
     text-decoration: underline;
 }
 
-/* Nieuwe event knop rechtsonder */
+
 .new-event-button {
     position: fixed;
     right: 20px;

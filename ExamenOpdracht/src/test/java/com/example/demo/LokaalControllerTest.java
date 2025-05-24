@@ -47,14 +47,15 @@ public class LokaalControllerTest {
         when(lokaalService.bestaatNaam(anyString())).thenReturn(false);
 
         mockMvc.perform(post("/lokaal/toevoegen")
-                        .param("naam", "TestLokaal")
-                        .param("capaciteit", "100")
-                        .with(csrf())) 
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .param("naam", "B123")
+                .param("capaciteit", "49")
+                .with(csrf()))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/"));
 
         verify(lokaalService, times(1)).save(any(Lokaal.class));
     }
+
 
 
     @Test

@@ -1,4 +1,4 @@
-/* Algemene pagina-opmaak */
+
 body {
     font-family: Arial, sans-serif;
     margin: 20px auto;
@@ -14,7 +14,7 @@ h1 {
     color: #007bff;
 }
 
-/* Tabelopmaak */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -47,7 +47,7 @@ td a:hover {
     text-decoration: underline;
 }
 
-/* Terug-knop */
+
 .back-button {
     display: inline-block;
     margin-top: 20px;

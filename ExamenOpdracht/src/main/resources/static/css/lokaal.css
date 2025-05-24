@@ -1,4 +1,4 @@
-/* Algemene pagina-opmaak */
+
 body {
     font-family: Arial, sans-serif;
     margin: 20px auto;
@@ -13,7 +13,7 @@ h1 {
     margin-bottom: 30px;
 }
 
-/* Login/Logout container */
+
 .auth-container {
     display: flex;
     justify-content: flex-end;
@@ -39,7 +39,7 @@ h1 {
     background-color: #0056b3;
 }
 
-/* Formulier styling */
+
 .form-container {
     background-color: white;
     padding: 20px;
@@ -85,13 +85,13 @@ input[type="number"]:focus {
     margin-bottom: 20px;
 }
 
-/* Buttons naast elkaar */
+
 .button-group {
     display: flex;
     gap: 10px;
 }
 
-/* Submit knop */
+
 .btn-submit {
     background-color: #007bff;
     color: white;
@@ -110,7 +110,7 @@ input[type="number"]:focus {
     background-color: #0056b3;
 }
 
-/* Terugknop (link die eruitziet als knop) */
+
 .btn-secondary {
     display: inline-block;
     background-color: #007bff;

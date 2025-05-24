@@ -13,9 +13,18 @@
 
         <div sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 10px;">
             <span>
-                <span th:text="#{label.role}">Rol:</span>
-                <span th:text="${userRoles != ''} ? userRoles : #{label.noRole}">Geen rol</span>
-            </span>
+    			<span th:text="#{label.role}">Rol:</span>
+    			<span th:if="${userRoles != ''}">
+      			  <span th:each="role : ${userRoles.split(', ')}" style="text-transform: capitalize; margin-right: 5px;">
+          			  <span th:switch="${role}">
+                		<span th:case="'ROLE_ADMIN'">Admin</span>
+               		 	<span th:case="'ROLE_USER'">User</span>
+                		<span th:case="*">[[${role}]]</span>
+            		</span>
+       			 </span>
+    			</span>
+   			 	<span th:if="${userRoles == ''}" th:text="#{label.noRole}">Geen rol</span>
+			</span>
 
             <form th:action="@{/logout}" method="post" style="margin:0;">
                 <button type="submit" th:text="#{button.logout}">Uitloggen</button>
@@ -33,7 +42,7 @@
     <p><strong th:text="#{label.room}">Lokaal:</strong> <span th:text="${event.lokaal.naam}"></span></p>
     <p><strong th:text="#{label.capacity}">Capaciteit:</strong> <span th:text="${event.lokaal.capaciteit}"></span></p>
 
-    <!-- Prijs toevoegen -->
+   
     <p>
         <strong th:text="#{label.price}">Prijs:</strong>
         <span th:if="${event.prijs != null}">

@@ -33,7 +33,7 @@ public class InitDataConfig {
 
             User admin = new User();
             admin.setUsername("admin");
-            admin.setPassword("admin"); // Let op: wachtwoorden moeten gehashed worden!
+            admin.setPassword("admin"); 
             admin.setRole(Role.ADMIN);
 
             User user = new User();

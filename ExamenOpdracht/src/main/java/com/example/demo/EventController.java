@@ -132,7 +132,7 @@ public class EventController {
     @GetMapping("/event/toevoeg")
     @PreAuthorize("hasRole('ADMIN')")
     public String toonEventToevoegPagina(Model model, Authentication authentication) {
-        model.addAttribute("event", new Event());  // Hier geen builder meer
+        model.addAttribute("event", new Event());  
         model.addAttribute("lokalen", lokaalService.findAll());
         addUserRolesToModel(authentication, model);
         return "eventToevoeg";

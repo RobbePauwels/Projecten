@@ -8,7 +8,17 @@
 <body>
 
 <div class="auth-container" th:if="${#authentication.principal != null}">
-    <strong th:text="#{label.role} + ': '">Rol: </strong><span th:text="${userRoles}">ROLE_GEBRUIKER</span>
+    <strong>Rol: </strong>
+    <span th:if="${userRoles != null}">
+        <span th:each="role : ${userRoles}" style="text-transform: capitalize; margin-right: 5px;">
+            <span th:switch="${role}">
+                <span th:case="'ROLE_ADMIN'">Admin</span>
+                <span th:case="'ROLE_USER'">User</span>
+                <span th:case="*">[[${role}]]</span>
+            </span>
+        </span>
+    </span>
+    <span th:if="${userRoles == null}">Geen rol</span>
 
     <form th:action="@{/logout}" method="post" style="margin:0;">
         <button type="submit" th:text="#{button.logout}">Logout</button>
@@ -17,7 +27,6 @@
 
 <h1>Lokaal Toevoegen</h1>
 
-<!-- Succesbericht -->
 <div th:if="${successMessage}" class="success-message">
     <p th:text="${successMessage}"></p>
 </div>

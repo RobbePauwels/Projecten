@@ -27,7 +27,6 @@ p {
 strong {
     color: #0056b3;
 }
-/* Login/Logout container */
 .auth-container {
     display: flex;
     justify-content: flex-end;

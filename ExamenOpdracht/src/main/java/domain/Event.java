@@ -3,6 +3,7 @@ package domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import validation.DatumBinnenJuni2025;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -46,6 +47,7 @@ public class Event {
 
     @ToString.Include
     @NotNull(message = "{event.datumtijd.notnull}")
+    @DatumBinnenJuni2025
     private LocalDateTime datumTijd;
 
     @Min(value = 1000, message = "{event.beamercode.min}")

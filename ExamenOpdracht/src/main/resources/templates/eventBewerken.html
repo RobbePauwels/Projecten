@@ -19,7 +19,6 @@
 
     <form th:action="@{/event/bewerken/{id}(id=${event.id})}" th:object="${event}" method="post">
         
-        <!-- Validatiefouten binnen het form -->
         <div th:if="${#fields.hasErrors('*')}">
             <p style="color:red">Er zijn fouten in het formulier:</p>
             <ul>
@@ -36,7 +35,8 @@
         <textarea th:field="*{beschrijving}" id="beschrijving" required></textarea>
 
         <label th:for="datumTijd" th:text="#{label.datetime}">Datum & Tijd:</label>
-        <input type="datetime-local" th:field="*{datumTijd}" id="datumTijd" required />
+        <input type="datetime-local" th:field="*{datumTijd}" id="datumTijd" 
+               min="2025-06-01T00:00" max="2025-06-30T23:59" required />
 
         <label th:for="lokaal" th:text="#{label.room}">Lokaal:</label>
         <select th:field="*{lokaal}" id="lokaal" required>

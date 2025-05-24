@@ -36,7 +36,8 @@
     </select>
 
     <label for="datumTijd" th:text="#{event.add.datetime}">Datum & Tijd*</label>
-    <input type="datetime-local" id="datumTijd" th:field="*{datumTijd}" required />
+    <input type="datetime-local" id="datumTijd" th:field="*{datumTijd}"
+           min="2025-06-01T00:00" max="2025-06-30T23:59" required />
 
     <label for="beamerCode" th:text="#{event.add.beamercode}">Beamercode (4 cijfers)*</label>
     <input type="text" id="beamerCode" th:field="*{beamerCode}" pattern="\d{4}" maxlength="4" required />

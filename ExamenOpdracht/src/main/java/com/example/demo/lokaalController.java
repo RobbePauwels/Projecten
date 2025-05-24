@@ -11,6 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/lokaal")
 public class lokaalController {
@@ -45,12 +49,14 @@ public class lokaalController {
         return "redirect:/";  
     }
 
-
     private void addUserRolesToModel(Authentication authentication, Model model) {
         if (authentication != null) {
-            model.addAttribute("userRoles", authentication.getAuthorities().toString());
+            List<String> roles = authentication.getAuthorities().stream()
+                .map(auth -> auth.getAuthority())
+                .collect(Collectors.toList());
+            model.addAttribute("userRoles", roles);
         } else {
-            model.addAttribute("userRoles", "");
+            model.addAttribute("userRoles", Collections.emptyList());
         }
     }
 }
