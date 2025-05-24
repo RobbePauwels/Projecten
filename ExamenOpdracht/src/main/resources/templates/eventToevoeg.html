@@ -19,6 +19,13 @@
 
 <form th:action="@{/event/toevoeg}" th:object="${event}" method="post">
 
+    <div th:if="${#fields.hasErrors('*')}">
+        <p style="color:red">Er zijn fouten in het formulier:</p>
+        <ul>
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
     <label for="naam" th:text="#{event.add.name}">Naam*</label>
     <input type="text" id="naam" th:field="*{naam}" required />
 
@@ -29,6 +36,12 @@
     <input type="text" th:field="*{sprekers[0]}" required />
     <input type="text" th:field="*{sprekers[1]}" />
     <input type="text" th:field="*{sprekers[2]}" />
+
+    <div th:if="${#fields.hasErrors('sprekers')}" style="color: red;">
+        <ul>
+            <li th:each="err : ${#fields.errors('sprekers')}" th:text="${err}"></li>
+        </ul>
+    </div>
 
     <label for="lokaal" th:text="#{event.add.room}">Lokaal*</label>
     <select id="lokaal" th:field="*{lokaal}" required>
@@ -46,7 +59,7 @@
     <input type="text" id="beamerCheck" th:field="*{beamerCheck}" pattern="\d{2}" maxlength="2" required />
 
     <label for="prijs" th:text="#{event.add.price}">Prijs (€)*</label>
-    <input type="number" step="0.01" min="9.99" max="99.99" id="prijs" th:field="*{prijs}" required />
+    <input type="number" step="0.01" min="9.99" max="100" id="prijs" th:field="*{prijs}" required />
 
     <div class="form-actions">
         <a th:href="@{/}" class="button-like" role="button" th:text="#{button.goBack}">Ga terug</a>

@@ -57,6 +57,12 @@
         <input type="text" th:field="*{sprekers[1]}" />
         <input type="text" th:field="*{sprekers[2]}" />
 
+        <div th:if="${#fields.hasErrors('sprekers')}" style="color: red;">
+            <ul>
+                <li th:each="err : ${#fields.errors('sprekers')}" th:text="${err}"></li>
+            </ul>
+        </div>
+
         <div class="form-actions">
             <button type="submit" th:text="#{button.save}">Opslaan</button>
             <a th:href="@{/}" th:text="#{link.backToOverview}">Terug naar overzicht</a>

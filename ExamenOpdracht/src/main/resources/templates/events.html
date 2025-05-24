@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<h1 th:text="#{title.eventlist}">Overzicht van de conferentie</h1>
+<h1 th:text="#{event.list.title}">Overzicht van de conferentie</h1>
 
 <div sec:authorize="hasRole('USER')" style="margin-bottom: 15px;">
     <a th:href="@{/favorieten}">

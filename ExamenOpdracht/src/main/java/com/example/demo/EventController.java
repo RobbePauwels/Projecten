@@ -40,13 +40,13 @@ public class EventController {
 
     @InitBinder("event")
     protected void initBinder(WebDataBinder binder) {
+    	System.out.println("InitBinder voor event wordt aangeroepen");
         Object target = binder.getTarget();
         if (target == null || !Event.class.isAssignableFrom(target.getClass())) {
             return;
         }
         binder.addValidators(eventValidatorAdvice);
     }
-
 
     private void addUserRolesToModel(Authentication authentication, Model model) {
         if (authentication != null) {
@@ -132,7 +132,7 @@ public class EventController {
     @GetMapping("/event/toevoeg")
     @PreAuthorize("hasRole('ADMIN')")
     public String toonEventToevoegPagina(Model model, Authentication authentication) {
-        model.addAttribute("event", new Event());  
+        model.addAttribute("event", new Event());
         model.addAttribute("lokalen", lokaalService.findAll());
         addUserRolesToModel(authentication, model);
         return "eventToevoeg";
@@ -144,6 +144,7 @@ public class EventController {
                                          BindingResult bindingResult,
                                          Model model,
                                          Authentication authentication) {
+    	eventValidatorAdvice.validate(event, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("lokalen", lokaalService.findAll());
             addUserRolesToModel(authentication, model);
@@ -185,6 +186,8 @@ public class EventController {
                                         BindingResult bindingResult,
                                         Model model,
                                         Authentication authentication) {
+    	
+    	eventValidatorAdvice.validate(event, bindingResult);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("lokalen", lokaalService.findAll());
