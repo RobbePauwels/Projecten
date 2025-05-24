@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Table: Films
+model Films {
+  FilmID    Int      @id @default(autoincrement())
+  Naam      String   @unique
+  Jaar      String
+  Duur      String
+  Genre     String
+  Rating    String
+  Awards    Awards[]
+  Acteurs   Film_Acteur[]
+  Locaties  Film_Locatie[]
+  Regisseur Persoon? @relation("Regisseur", fields: [RegisseurID], references: [PersoonID])
+  RegisseurID Int?
+  User  User  @relation(fields: [addedByUserID], references: [id])
+  addedByUserID Int @db.UnsignedInt @default(1) 
+}
+
+model Persoon {
+  PersoonID    Int      @id @default(autoincrement())
+  Voornaam     String
+  Achternaam   String
+  GeboorteDatum String
+  Land         String
+  Rollen       Film_Acteur[]
+  Regisseert   Films[]  @relation("Regisseur")
+
+  @@unique([Voornaam, Achternaam])
+}
+
+// Table: Awards
+model Awards {
+  AwardID   Int    @id @default(autoincrement())
+  Naam      String
+  Jaar      String
+  Film      Films   @relation(fields: [FilmID], references: [FilmID])
+  FilmID    Int
+
+  @@unique([Naam, Jaar])
+}
+
+// Table: Locatie
+model Locatie {
+  LocatieID  Int      @id @default(autoincrement())
+  Straat     String
+  Stad       String
+  Land       String
+  Foto       String?
+  Films      Film_Locatie[]
+
+  @@unique([Straat, Stad, Land])
+}
+
+// Junction Table: Film_Acteur
+model Film_Acteur {
+  FilmID      Int
+  PersoonID   Int
+  Rol         String
+  Film        Films   @relation(fields: [FilmID], references: [FilmID])
+  Persoon     Persoon @relation(fields: [PersoonID], references: [PersoonID])
+
+  @@id([FilmID, PersoonID])
+}
+
+// Junction Table: Film_Locatie
+model Film_Locatie {
+  FilmID      Int
+  LocatieID   Int
+  Film        Films   @relation(fields: [FilmID], references: [FilmID])
+  Locatie     Locatie @relation(fields: [LocatieID], references: [LocatieID])
+
+  @@id([FilmID, LocatieID])
+}
+
+model User {
+  @@map("users")               // Set the table name to "users"
+
+  id            Int            @id @default(autoincrement()) @db.UnsignedInt
+  naam          String         @db.VarChar(255)
+  email         String         @unique(map: "idx_user_email_unique") @db.VarChar(255)
+  password_hash String         @db.VarChar(255)
+  roles         Json
+  Film          Films[]
+}
